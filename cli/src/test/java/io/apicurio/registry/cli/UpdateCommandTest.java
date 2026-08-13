@@ -61,6 +61,44 @@ public class UpdateCommandTest {
             .doesNotContain("--global");
     }
 
+    @Test
+    public void testPostponeWithinCapReportsActualHours(@TempDir Path tempDir) throws Exception {
+        prepareUpdateForHomeContaining(tempDir, "{}");
+
+        final StringBuilder out = new StringBuilder();
+        final var originalOut = config.getStdOut();
+        config.setStdOut(out::append);
+        try {
+            new CommandLine(new Acr(), factory).execute("update", "--postpone", "24");
+        } finally {
+            config.setStdOut(originalOut);
+        }
+
+        assertThat(out.toString())
+            .as("Confirmation should report the hours that were actually stored (24 <= cap)")
+            .contains("24 hours");
+    }
+
+    @Test
+    public void testPostponeAboveCapReportsClampedHours(@TempDir Path tempDir) throws Exception {
+        prepareUpdateForHomeContaining(tempDir, "{}");
+
+        final StringBuilder out = new StringBuilder();
+        final var originalOut = config.getStdOut();
+        config.setStdOut(out::append);
+        try {
+            // 999999 >> MAX_POSTPONE_HOURS (8760); the clamped value must appear in the message.
+            new CommandLine(new Acr(), factory).execute("update", "--postpone", "999999");
+        } finally {
+            config.setStdOut(originalOut);
+        }
+
+        assertThat(out.toString())
+            .as("Confirmation must report the clamped cap (8760), not the raw input (999999)")
+            .contains(String.valueOf(UpdateCommand.MAX_POSTPONE_HOURS))
+            .doesNotContain("999999");
+    }
+
     /**
      * Writes a config.json with the given contents into a fresh home, points the running binary's
      * home at it (as the acr launcher would when 'acr update' runs), and returns a wired-up command.

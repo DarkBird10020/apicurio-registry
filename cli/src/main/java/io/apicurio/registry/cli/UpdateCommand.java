@@ -94,7 +94,7 @@ public class UpdateCommand extends AbstractCommand {
         handleAutoUpdate(output, currentVersion);
     }
 
-    private static final int MAX_POSTPONE_HOURS = 8760; // 1 year
+    static final int MAX_POSTPONE_HOURS = 8760; // 1 year
 
     private void handlePostpone(OutputBuffer output) {
         var hours = Math.min(postponeHours, MAX_POSTPONE_HOURS);
@@ -102,7 +102,7 @@ public class UpdateCommand extends AbstractCommand {
         var until = Instant.now().plusSeconds(hours * 3600L);
         configModel.getConfig().put("internal.update.postponed-until", until.toString());
         config.write(configModel);
-        output.writeStdOutLine("Update notifications postponed for %d hours.".formatted(postponeHours));
+        output.writeStdOutLine("Update notifications postponed for %d hours.".formatted(hours));
     }
 
     private void handleCheck(OutputBuffer output, CliVersion currentVersion) {
