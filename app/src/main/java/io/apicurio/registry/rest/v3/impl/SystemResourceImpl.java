@@ -104,7 +104,7 @@ public class SystemResourceImpl implements SystemResource {
             uiConfig.authOidcRedirectUri.ifPresent(uri -> options.put("redirectUri", uri));
             options.put("clientId", uiConfig.authOidcClientId);
             options.put("scope", uiConfig.scope);
-            if (!"f5".equals(uiConfig.authOidcLogoutUrl)) {
+            if (!"_".equals(uiConfig.authOidcLogoutUrl)) {
                 options.put("logoutUrl", uiConfig.authOidcLogoutUrl);
             }
             // Only include loadUserInfo if explicitly configured

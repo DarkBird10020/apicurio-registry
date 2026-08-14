@@ -34,7 +34,7 @@ public class UserInterfaceConfigProperties {
     @ConfigProperty(name = "apicurio.ui.auth.oidc.client-id", defaultValue = "apicurio-registry-ui")
     @Info(category = CATEGORY_UI, description = "The OIDC clientId", availableSince = "3.0.0")
     public String authOidcClientId;
-    @ConfigProperty(name = "apicurio.ui.auth.oidc.logout-url", defaultValue = "f5")
+    @ConfigProperty(name = "apicurio.ui.auth.oidc.logout-url", defaultValue = "_")
     @Info(category = CATEGORY_UI, description = "The OIDC logout URL", availableSince = "3.0.0")
     public String authOidcLogoutUrl;
 
